@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcador Tómame Una Foto</title>
+    <style>
+        body {
+            /* Fondo transparente indispensable para overlays */
+            background-color: transparent; 
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            user-select: none;
+        }
+        .marcador-container {
+            display: flex;
+            align-items: center;
+            background: rgba(15, 15, 15, 0.9);
+            width: max-content;
+            padding: 5px 15px;
+            border-radius: 6px;
+            margin: 30px;
+            border: 2px solid #333;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+        }
+        .equipo {
+            font-size: 22px;
+            font-weight: bold;
+            padding: 0 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .score {
+            background: #e30613; /* Rojo deportivo */
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 26px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .score:active {
+            transform: scale(0.9);
+        }
+        .separador {
+            padding: 0 10px;
+            font-weight: bold;
+            font-size: 20px;
+            color: #aaa;
+        }
+        .timer {
+            margin-left: 20px;
+            color: #ffcc00;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 26px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="marcador-container">
+        <div class="equipo" id="nombreLocal">LOCAL</div>
+        <div class="score" id="scoreLocal" onclick="sumarGol('local')">0</div>
+        
+        <div class="separador">-</div>
+        
+        <div class="score" id="scoreVisita" onclick="sumarGol('visita')">0</div>
+        <div class="equipo" id="nombreVisita">VISITA</div>
+        
+        <div class="timer" id="tiempo" onclick="toggleTimer()">00:00</div>
+    </div>
+
+    <script>
+        let golesLocal = 0;
+        let golesVisita = 0;
+        let timerInterval;
+        let segundosTotales = 0;
+        let timerActivo = false;
+
+        // Función para incrementar el marcador al hacer clic
+        function sumarGol(equipo) {
+            if(equipo === 'local') {
+                golesLocal++;
+                document.getElementById('scoreLocal').innerText = golesLocal;
+            } else {
+                golesVisita++;
+                document.getElementById('scoreVisita').innerText = golesVisita;
+            }
+        }
+
+        // Función para iniciar o pausar el cronómetro al hacer clic
+        function toggleTimer() {
+            if (timerActivo) {
+                clearInterval(timerInterval);
+                timerActivo = false;
+            } else {
+                timerActivo = true;
+                timerInterval = setInterval(() => {
+                    segundosTotales++;
+                    let minutos = Math.floor(segundosTotales / 60);
+                    let segundos = segundosTotales % 60;
+                    
+                    // Formato 00:00
+                    document.getElementById('tiempo').innerText = 
+                        (minutos < 10 ? "0" + minutos : minutos) + ":" + 
+                        (segundos < 10 ? "0" + segundos : segundos);
+                }, 1000);
+            }
+        }
+    </script>
+</body>
+</html>
